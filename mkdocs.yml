@@ -1,0 +1,34 @@
+site_name: CUDAプログラミングガイド 日本語解説
+site_url: https://sukeya.github.io/cuda_programming_guide_jp
+repo_url: https://github.com/sukeya/cuda_programming_guide_jp
+repo_name: sukeya/cuda_programming_guide_jp
+edit_uri: blob/main/docs/
+nav:
+  - '概要': ./index.md
+  - 'プログラミングモデル': ./programming_model.md
+  - 'プログラミングインターフェイス': ./programming_interface.md
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.code.copy
+    - content.action.edit
+    - toc.integrate
+    - navigation.top
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+plugins:
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: iso_date
+  - git-committers:
+      repository: sukeya/cuda_programming_guide_jp
+      branch: main
+      token: !!python/object/apply:os.getenv ["MKDOCS_GIT_COMMITTERS_APIKEY"]
