@@ -1,0 +1,6 @@
+mkdocs
+mkdocs-material
+markdown
+pymdown-extensions
+mkdocs-git-revision-date-localized-plugin
+mkdocs-git-committers-plugin
