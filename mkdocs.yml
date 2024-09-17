@@ -18,6 +18,7 @@ theme:
     - navigation.top
 markdown_extensions:
   - admonition
+  - footnotes
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
