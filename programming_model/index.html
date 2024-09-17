@@ -491,9 +491,10 @@
 <p>Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。<code>cudaOccupancyMaxPotentialClusterSize</code>関数で確認することも出来る。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-clusters.png" />
 <em>スレッドブロッククラスターのグリッド</em></p>
-<p>!!! note "注"</p>
-<div class="language-text highlight"><pre><span></span><code>互換性から、`gridDim`変数はスレッドブロック数の意味でのサイズを表している。クラスター内のブロックのランクはクラスターグループAPIを使うと得られる。
-</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">注</p>
+<p>互換性から、<code>gridDim</code>変数はスレッドブロック数の意味でのサイズを表している。クラスター内のブロックのランクはクラスターグループAPIを使うと得られる。</p>
+</div>
 <p>スレッドブロッククラスターは<code>__cluster_dims__(X,Y,Z)</code>というカーネル属性を使ってコンパイル時に有効にしたり、<code>cudaLaunchKernelEx</code>というCUDAカーネルを実行する関数を使って実行時に有効にしたり出来る。</p>
 <p>以下はコンパイル時カーネル属性を使った、クラスターの使い方の例である。
 コンパイル時にクラスターサイズを指定すると、カーネル起動時にクラスターサイズを変更できない。</p>
