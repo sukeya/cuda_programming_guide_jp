@@ -460,7 +460,7 @@
 <p>ブロックは以下の図のように、スレッドのブロックの1次元、2次元、3次元のグリッドに統合されている。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-thread-blocks.png" />
 <em>スレッドブロックのグリッド</em></p>
-<p><code>&lt;&lt;&lt;...&gt;&gt;&gt;</code>で指定されたブロックあたりのスレッド数とグリッドあたりのブロック数の型は<code>int</code>または<code>dim3</code>である。2次元のブロックまたはグリッドは上の例で指定されている。</p>
+<p><code>&lt;&lt;&lt;...&gt;&gt;&gt;</code>で指定された、ブロックあたりのスレッド数とグリッドあたりのブロック数の型は<code>int</code>または<code>dim3</code>である。2次元のブロックまたはグリッドは上の例で指定されている。</p>
 <p>グリッド内の各ブロックは組み込み変数<code>blockIdx</code>を通してカーネル内でアクセスできる、1次元、2次元、3次元の一意なインデックスによって識別される。スレッドブロックの次元は組み込み変数<code>blockDim</code>を通してカーネル内でアクセスできる。</p>
 <p>前の<code>MatAdd()</code>の例を複数のブロックを扱うよう拡張すると、コードは以下のようになる。</p>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Kernel definition</span>
@@ -491,9 +491,9 @@
 <p>Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。<code>cudaOccupancyMaxPotentialClusterSize</code>関数で確認することも出来る。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-clusters.png" />
 <em>スレッドブロッククラスターのグリッド</em></p>
-<p>:::message
-互換性から、<code>gridDim</code>変数はスレッドブロック数の意味でのサイズを表している。クラスター内のブロックのランクはクラスターグループAPIを使うと得られる。
-:::</p>
+<p>!!! note "注"</p>
+<div class="language-text highlight"><pre><span></span><code>互換性から、`gridDim`変数はスレッドブロック数の意味でのサイズを表している。クラスター内のブロックのランクはクラスターグループAPIを使うと得られる。
+</code></pre></div>
 <p>スレッドブロッククラスターは<code>__cluster_dims__(X,Y,Z)</code>というカーネル属性を使ってコンパイル時に有効にしたり、<code>cudaLaunchKernelEx</code>というCUDAカーネルを実行する関数を使って実行時に有効にしたり出来る。</p>
 <p>以下はコンパイル時カーネル属性を使った、クラスターの使い方の例である。
 コンパイル時にクラスターサイズを指定すると、カーネル起動時にクラスターサイズを変更できない。</p>
@@ -629,7 +629,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-16</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-17</span>
   </span>
 
     
