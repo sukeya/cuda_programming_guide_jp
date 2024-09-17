@@ -109,7 +109,7 @@ int main()
 [共有メモリ](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory)には共有メモリを使った例があり、[Cooperative Groups API](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cooperative-groups)には同期するスレッドを管理するAPIが書かれている。
 
 ### スレッドブロッククラスター
-Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。`cudaOccupancyMaxPotentialClusterSize`関数で確認することも出来る。
+Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。クラスターでは、複数のSMで並列に動作する複数のスレッドブロックを同期させ、共同でデータの取得や交換を行うことができる[^1]。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。`cudaOccupancyMaxPotentialClusterSize`関数で確認することも出来る。
 
 ![](https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-clusters.png)
 *スレッドブロッククラスターのグリッド*
@@ -236,3 +236,5 @@ CUDAのプログラミングモデルでは、スレッドは計算やメモリ�
 デバイスのCompute Capabilityは時々、"SMバージョン"とも呼ばれる、バージョン番号によって表される。このバージョン番号はGPUハードウェアによってサポートされる特徴を識別し、現在のGPU上でどのハードウェアの特徴や命令が使えるかを決定するために実行時にアプリケーションによって使われる。
 
 compute capabilityは主要な改訂番号Xと副次的な改訂番号Yからなり、X.Yと表される。同じ主要な改定番号を持つデバイスは同じコアアーキテクチャを持つ。副次的な改訂番号は新しい特徴やコアアーキテクチャの改善に対応する。
+
+[^1]: [NVIDIA Hopper アーキテクチャの徹底解説](https://squidfunk.github.io/mkdocs-material/reference/footnotes/)
