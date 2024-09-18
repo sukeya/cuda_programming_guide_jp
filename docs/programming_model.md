@@ -208,7 +208,7 @@ CUDAスレッドは以下の図のように、実行中に複数のメモリ空�
 
 CUDAプログラミングモデルはホストとデバイスの両方がそれぞれ自身のメモリ空間をDRAMの中に持つことも仮定している。これらのメモリはそれぞれホストメモリとデバイスメモリと言われる。従って、プログラムはCUDAランタイムの呼び出しを通して、カーネルからアクセスできるグローバル、定数、テクスチャのメモリ空間を管理する (詳しくは[プログラミングインターフェイス](programming_interface)にて)。これはデバイスメモリの確保と解放、ホストとデバイスメモリ間のデータ転送も含む。
 
-ユニファイドメモリはホストとデバイスのメモリ空間の橋渡しをする、管理されたメモリを提供する。管理されたメモリは、システムのすべてのCPUとGPUから共通のアドレス空間を持つ単一の一貫したメモリとしてアクセスできる。これによって、デバイスメモリを余分に確保でき、明示的にホストとデバイス上のデータを同期する必要がなくなることからアプリケーションの移植がかなり単純化できる。詳しくは[ユニファイドメモリプログラミング](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-unified-memory-programming-hd)にて。
+ユニファイドメモリと呼ばれる、ホストとデバイスの両方からアクセスできる、単一のメモリアドレス空間もある。このメモリを使うと、CPUとGPUの両方からアクセスされるデータのメモリ確保やアクセスがとても簡単になる。詳しくは[ユニファイドメモリプログラミング](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-unified-memory-programming-hd)にて。
 
 ![](https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/heterogeneous-programming.png)
 *ヘテロジニアスプログラミング*
