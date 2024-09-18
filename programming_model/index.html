@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
     
     
       
@@ -553,22 +553,24 @@
 </span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>スレッドブロッククラスターを使うと、クラスター内の全てのスレッドブロックは一つのGPUクラスター上で一緒にスケジュールされ、<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cluster-group">クラスターグループAPI</a>の<code>cluster.sync()</code>を使ってハードウェアにサポートされた同期を行うことができる。また、クラスターグループはスレッド数やブロック数の意味でクラスターグループのサイズを得る<code>num_thread()</code>や<code>num_blocks()</code>といったメンバ関数を提供している。</p>
+<p>スレッドブロッククラスターを使うと、クラスター内のスレッドブロックは全て一緒にスケジュールされ、<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cluster-group">クラスターグループAPI</a>の<code>cluster.sync()</code>を使って同期できる。また、クラスターグループはスレッド数やブロック数の意味でクラスターグループのサイズを得る<code>num_thread()</code>や<code>num_blocks()</code>といったメンバ関数を提供している。</p>
 <p>クラスター内のスレッドブロックは分散共有メモリへの読み書きと排他制御を行える。<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#distributed-shared-memory">分散共有メモリ</a>には分散共有メモリでヒストグラムを計算する例が載っている。</p>
 <h2 id="_5">メモリ階層</h2>
-<p>CUDAスレッドは以下の図のように、実行中に複数のメモリ空間のデータにアクセスできる。
-- 各スレッドはプライベートなローカルメモリを持つ。
-- 各スレッドブロックはブロック内のすべてのスレッドに見える、ブロックと同じ寿命を持つ共有メモリを持つ。
-- スレッドブロッククラスター内のスレッドブロックはお互いの共有メモリへの読み書きと排他制御を行える。
-- すべてのスレッドは同じグローバルメモリにアクセスできる。</p>
+<p>CUDAスレッドは以下の図のように、実行中に複数のメモリ空間のデータにアクセスできる。</p>
+<ul>
+<li>各スレッドはプライベートなローカルメモリを持つ。</li>
+<li>各スレッドブロックはブロック内のスレッドからアクセスできる、ブロックと同じ生存期間を持つ共有メモリを持つ。</li>
+<li>スレッドブロッククラスター内のスレッドブロックはお互いの共有メモリへの読み書きと排他制御を行える。</li>
+<li>すべてのスレッドは同じグローバルメモリにアクセスできる。</li>
+</ul>
 <p>また、定数とテクスチャメモリ空間は全てのスレッドからアクセスできる、読み込み専用メモリである。グローバル、定数、テクスチャメモリ空間は異なるメモリ使用法に対して最適化されている (詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#device-memory-accesses">デバイスメモリアクセス</a>にて)。テクスチャメモリは特定のデータフォーマットに対して異なるアドレッシングモードとデータフィルタリングも提供している (詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#texture-and-surface-memory">テクスチャとサーフェスメモリ</a>にて)。</p>
 <p>グローバル、定数、テクスチャメモリ空間は同じアプリケーションによるカーネルの実行中、持続する。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/memory-hierarchy.png" />
 <em>メモリ階層</em></p>
 <h2 id="_6">ヘテロジニアスプログラミング</h2>
-<p>以下の図に示すように、CUDAのプログラミングモデルはCUDAスレッドが、C++プログラムを実行するホストに付随するプロセッサーとして操作される、物理的に分けられたデバイス上で実行することを仮定している。これは、例えば、カーネルがGPU上で実行していて、CPU上でC++プログラムの残りを実行する時である。</p>
-<p>CUDAプログラミングモデルはホストとデバイスの両方がそれぞれ自身のメモリ空間をDRAMの中に持つことも仮定している。これらのメモリはそれぞれホストメモリとデバイスメモリと言われる。従って、プログラムはCUDAランタイムの呼び出しを通してカーネルに見えるグローバル、定数、テクスチャのメモリ空間を管理する (詳しくは<a href="programming_interface">プログラミングインターフェイス</a>にて)。これはデバイスメモリの確保と解放、ホストとデバイスメモリ間のデータ転送も含む。</p>
-<p>ユニファイドメモリはホストとデバイスのメモリ空間の橋渡しをする、管理されたメモリを提供する。管理されたメモリは、システムのすべてのCPUとGPUから共通のアドレス空間を持つ単一の一貫したメモリイメージとしてアクセスできる。これによって、デバイスメモリを余分に確保でき、明示的にホストとデバイス上のデータを同期する必要がなくなることからアプリケーションの移植がかなり単純化できる。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-unified-memory-programming-hd">ユニファイドメモリプログラミング</a>にて。</p>
+<p>以下の図に示すように、CUDAのプログラミングモデルはCUDAスレッドが物理的に分けられた、ホストに付随するデバイス上で実行されることを仮定している。これは例えば、カーネルがGPU上で実行されていて、CPU上でC++プログラムの残りを実行する時である。</p>
+<p>CUDAプログラミングモデルはホストとデバイスの両方がそれぞれ自身のメモリ空間をDRAMの中に持つことも仮定している。これらのメモリはそれぞれホストメモリとデバイスメモリと言われる。従って、プログラムはCUDAランタイムの呼び出しを通して、カーネルからアクセスできるグローバル、定数、テクスチャのメモリ空間を管理する (詳しくは<a href="programming_interface">プログラミングインターフェイス</a>にて)。これはデバイスメモリの確保と解放、ホストとデバイスメモリ間のデータ転送も含む。</p>
+<p>ユニファイドメモリはホストとデバイスのメモリ空間の橋渡しをする、管理されたメモリを提供する。管理されたメモリは、システムのすべてのCPUとGPUから共通のアドレス空間を持つ単一の一貫したメモリとしてアクセスできる。これによって、デバイスメモリを余分に確保でき、明示的にホストとデバイス上のデータを同期する必要がなくなることからアプリケーションの移植がかなり単純化できる。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-unified-memory-programming-hd">ユニファイドメモリプログラミング</a>にて。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/heterogeneous-programming.png" />
 <em>ヘテロジニアスプログラミング</em></p>
 <h2 id="simt">非同期SIMTプログラミングモデル</h2>
@@ -638,7 +640,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-17</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-18</span>
   </span>
 
     
@@ -723,7 +725,7 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "toc.integrate", "navigation.top"], "search": "../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "toc.integrate", "navigation.top"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
