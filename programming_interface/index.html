@@ -596,14 +596,17 @@
 <p>といった低級な概念を提供する。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#driver-api">ドライバーAPI</a>にて。</p>
 <h2 id="nvcc">NVCCを使ったコンパイル</h2>
 <p>カーネルはPTXと呼ばれる、CUDAの命令セットを使って書くこともできる。しかし、普通はC++のような高級言語を使ったほうがより効率的である。どちらにしろ、カーネルは<code>nvcc</code>を使ってデバイス上で実行されるバイナリコードにコンパイルされる必要がある。</p>
-<p><code>nvcc</code>はC++やPTXコードのコンパイルを単純にするコンパイルドライバーである。これは単純で親しみ深いコマンドラインを提供し、異なるコンパイルステージを実装するツールのコレクションを呼び出し、それらを実行する。この節では<code>nvcc</code>ワークフローの概要とコマンドオプションの概要を述べる。</p>
+<p><code>nvcc</code>はC++やPTXコードのコンパイルを単純にするコンパイルドライバーである。これは単純で親しみ深いコマンドを提供し、異なるコンパイルステージを実装するツールを呼び出して実行する。この節では<code>nvcc</code>ワークフローの概要とコマンドオプションの概要を述べる。</p>
 <p>詳しくは<a href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html">NVIDIA CUDA Compiler Driver NVCC</a>にて。</p>
 <h3 id="_1">コンパイルワークフロー</h3>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/_images/cuda-compilation-from-cu-to-executable.png" /></p>
 <h4 id="_2">オフラインコンパイル</h4>
-<p><code>nvcc</code>によってコンパイルされるソースファイルはホストコードとデバイスコードを含みうる。<code>nvcc</code>の基本的なワークフローはホストコードからデバイスコードを分け、
-1. デバイスコードをアセンブリ形式(PTXコード)かバイナリ形式(cubinオブジェクト)にコンパイルし、
-2. ホストコードでカーネルに指定された<code>&lt;&lt;&lt;...&gt;&gt;&gt;</code>を、PTXコードやcubinオブジェクトからコンパイルされたカーネルを読み込んで起動するために必要なCUDAランタイム関数の呼び出しに置き換える</p>
+<p><code>nvcc</code>によってコンパイルされるソースファイルはホストコードとデバイスコードを含みうる。<code>nvcc</code>の基本的なワークフローは</p>
+<ol>
+<li>ホストコードからデバイスコードを分け、</li>
+<li>デバイスコードをアセンブリ形式(PTXコード)かバイナリ形式(cubinオブジェクト)にコンパイルし、</li>
+<li>ホストコードでカーネルに指定された<code>&lt;&lt;&lt;...&gt;&gt;&gt;</code>を、PTXコードやcubinオブジェクトからコンパイルされたカーネルを読み込んで起動するために必要なCUDAランタイム関数の呼び出しに置き換える</li>
+</ol>
 <p>ことである。</p>
 <p>修正されたホストコードは他のツールを使ってコンパイルできるようにC++コードとして出力されるか、最後のコンパイルステージで<code>nvcc</code>にホストコンパイラを呼び出させることでオブジェクトコードとして直接出力される。</p>
 <p>アプリケーションは、
@@ -1320,7 +1323,7 @@ CUDAインターフェイスはホストプログラムの開始時に初期化�
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-19</span>
   </span>
 
     
