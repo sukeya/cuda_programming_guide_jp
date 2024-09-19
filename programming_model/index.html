@@ -488,7 +488,7 @@
 <p>ブロック内のスレッドは<code>__syncthreads()</code>という関数を使うと同期できる。つまり、ブロック内の各スレッドはブロック内の全てのスレッドが<code>__syncthreads()</code>を実行するまで待たなければならない。</p>
 <p><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory">共有メモリ</a>には共有メモリを使った例があり、<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cooperative-groups">Cooperative Groups API</a>には同期するスレッドを管理するAPIが書かれている。</p>
 <h3 id="_4">スレッドブロッククラスター</h3>
-<p>Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。クラスターでは、複数のSMで並列に動作する複数のスレッドブロックを同期させ、共同でデータの取得や交換を行うことができる<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。<code>cudaOccupancyMaxPotentialClusterSize</code>関数で確認することも出来る。</p>
+<p>Compute Capability 9.0からスレッドブロッククラスターという、スレッドブロックから構成された、省略可能なスレッド階層が導入された。クラスターでは、複数のストリーミングマルチプロセッサーで並列に動作する複数のスレッドブロックを同期させ、共同でデータの取得や交換を行うことができる<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>。スレッドブロックと同様に、クラスターも1次元または2次元、3次元で構成されている。クラスター内のスレッドブロック数はユーザーが決められ、ポータブルなクラスターサイズとして最大8スレッドブロックがサポートされている。<code>cudaOccupancyMaxPotentialClusterSize</code>関数で確認することも出来る。</p>
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/grid-of-clusters.png" />
 <em>スレッドブロッククラスターのグリッド</em></p>
 <div class="admonition note">
@@ -608,8 +608,8 @@
 </table>
 <p>これらのスレッドスコープはCUDA標準C++ライブラリ内の標準C++の拡張として定義されている。</p>
 <h2 id="compute-capability">Compute Capability</h2>
-<p>デバイスのCompute Capabilityは時々、"SMバージョン"とも呼ばれる、バージョン番号によって表される。このバージョン番号はGPUハードウェアによってサポートされる特徴を識別し、現在のGPU上でどのハードウェアの特徴や命令が使えるかを決定するために実行時にアプリケーションによって使われる。</p>
-<p>compute capabilityは主要な改訂番号Xと副次的な改訂番号Yからなり、X.Yと表される。同じ主要な改定番号を持つデバイスは同じコアアーキテクチャを持つ。副次的な改訂番号は新しい特徴やコアアーキテクチャの改善に対応する。</p>
+<p>デバイスのCompute Capabilityは時々、"ストリーミングマルチプロセッサーバージョン"(SMバージョン)とも呼ばれる、バージョン番号によって表される。このバージョン番号はGPUハードウェアによってサポートされる特徴を識別し、現在のGPU上でどのハードウェアの特徴や命令が使えるかを決定するために実行時にアプリケーションによって使われる。</p>
+<p>compute capabilityはメジャーバージョンXとマイナーバージョンYからなり、X.Yと表される。同じメジャーバージョンを持つデバイスは同じコアアーキテクチャを持つ。マイナーバージョンは新しい特徴やコアアーキテクチャの改善に対応する。</p>
 <div class="footnote">
 <hr />
 <ol>
