@@ -574,10 +574,10 @@
 <p><img alt="" src="https://docs.nvidia.com/cuda/cuda-c-programming-guide/_images/heterogeneous-programming.png" />
 <em>ヘテロジニアスプログラミング</em></p>
 <h2 id="simt">非同期SIMTプログラミングモデル</h2>
-<p>CUDAのプログラミングモデルでは、スレッドは計算やメモリ操作を行う最も低レベルな抽象化である。compute capability 8.0以上のデバイスでは、ハードウェアによって高速化なバリアやメモリコピーが提供されている。compute capability 7.0以上が必要。</p>
+<p>CUDAのプログラミングモデルでは、スレッドは計算やメモリ操作を行う最も低レベルな抽象化である。compute capability 8.0以上のデバイスでは、ハードウェアによる高速なバリアやメモリコピーが提供されている。compute capability 7.0以上が必要。</p>
 <h3 id="_7">非同期操作</h3>
 <p>非同期操作はCUDAスレッドによって開始される操作として定義され、まるで他のスレッドによって行われるように非同期に実行される。正しいプログラムでは、一つ以上のCUDAスレッドが非同期操作と同期する。非同期操作を開始したCUDAスレッドは同期しているスレッドに含まれる必要はない。</p>
-<p>非同期なスレッドは必ず非同期操作を開始したCUDAスレッドに紐付いている。非同期操作は操作の完了を同期するために同期オブジェクトを使う。同期オブジェクトは明示的に(例えば<code>cuda::memcpy_async</code>などで)ユーザーによって管理されるか、暗黙に(例えば<code>cooperative_groups::memcpy_async</code>などで)ライブラリによって管理される。同期オブジェクトの例として、<code>cuda::barrier</code>や<code>cuda::pipeline</code>がある。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#aw-barrier">非同期バリア</a>と<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-data-copies">cuda::pipelineを使った非同期なデータコピー</a>にて。</p>
+<p>非同期なスレッドは必ず非同期操作を開始したCUDAスレッドに紐付いている。非同期操作は操作の完了を同期するために同期オブジェクトを使う。同期オブジェクトは(例えば<code>cuda::memcpy_async</code>などで)明示的にユーザーによって管理されるか、(例えば<code>cooperative_groups::memcpy_async</code>などで)暗黙にライブラリによって管理される。同期オブジェクトの例として、<code>cuda::barrier</code>や<code>cuda::pipeline</code>がある。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#aw-barrier">非同期バリア</a>と<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-data-copies">cuda::pipelineを使った非同期なデータコピー</a>にて。</p>
 <p>これらの同期オブジェクトは異なるスレッドスコープで使うことが出来る。スコープは非同期操作と同期するための同期オブジェクトを使うかもしれないスレッドの集合を定義する。
 以下のテーブルはCUDA C++で使えるスレッドスコープと一緒に同期されるスレッドを定義する。</p>
 <table>
@@ -601,7 +601,7 @@
 <td>開始したスレッドと同じGPUデバイス内の任意のスレッド</td>
 </tr>
 <tr>
-<td><code>cuda::thread_scope::thread_scope_device</code></td>
+<td><code>cuda::thread_scope::thread_scope_system</code></td>
 <td>開始したスレッドと同じシステム内の任意のスレッド</td>
 </tr>
 </tbody>
@@ -640,7 +640,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-18</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-19</span>
   </span>
 
     
