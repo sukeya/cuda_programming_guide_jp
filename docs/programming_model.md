@@ -214,12 +214,12 @@ CUDAプログラミングモデルはホストとデバイスの両方がそれ�
 *ヘテロジニアスプログラミング*
 
 ## 非同期SIMTプログラミングモデル
-CUDAのプログラミングモデルでは、スレッドは計算やメモリ操作を行う最も低レベルな抽象化である。compute capability 8.0以上のデバイスでは、ハードウェアによって高速化なバリアやメモリコピーが提供されている。compute capability 7.0以上が必要。
+CUDAのプログラミングモデルでは、スレッドは計算やメモリ操作を行う最も低レベルな抽象化である。compute capability 8.0以上のデバイスでは、ハードウェアによる高速なバリアやメモリコピーが提供されている。compute capability 7.0以上が必要。
 
 ### 非同期操作
 非同期操作はCUDAスレッドによって開始される操作として定義され、まるで他のスレッドによって行われるように非同期に実行される。正しいプログラムでは、一つ以上のCUDAスレッドが非同期操作と同期する。非同期操作を開始したCUDAスレッドは同期しているスレッドに含まれる必要はない。
 
-非同期なスレッドは必ず非同期操作を開始したCUDAスレッドに紐付いている。非同期操作は操作の完了を同期するために同期オブジェクトを使う。同期オブジェクトは明示的に(例えば`cuda::memcpy_async`などで)ユーザーによって管理されるか、暗黙に(例えば`cooperative_groups::memcpy_async`などで)ライブラリによって管理される。同期オブジェクトの例として、`cuda::barrier`や`cuda::pipeline`がある。詳しくは[非同期バリア](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#aw-barrier)と[cuda::pipelineを使った非同期なデータコピー](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-data-copies)にて。
+非同期なスレッドは必ず非同期操作を開始したCUDAスレッドに紐付いている。非同期操作は操作の完了を同期するために同期オブジェクトを使う。同期オブジェクトは(例えば`cuda::memcpy_async`などで)明示的にユーザーによって管理されるか、(例えば`cooperative_groups::memcpy_async`などで)暗黙にライブラリによって管理される。同期オブジェクトの例として、`cuda::barrier`や`cuda::pipeline`がある。詳しくは[非同期バリア](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#aw-barrier)と[cuda::pipelineを使った非同期なデータコピー](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#asynchronous-data-copies)にて。
 
 これらの同期オブジェクトは異なるスレッドスコープで使うことが出来る。スコープは非同期操作と同期するための同期オブジェクトを使うかもしれないスレッドの集合を定義する。
 以下のテーブルはCUDA C++で使えるスレッドスコープと一緒に同期されるスレッドを定義する。
@@ -229,7 +229,7 @@ CUDAのプログラミングモデルでは、スレッドは計算やメモリ�
 | `cuda::thread_scope::thread_scope_thread` | 非同期操作を開始したスレッドのみ |
 | `cuda::thread_scope::thread_scope_block` | 開始したスレッドと同じスレッドブロック内の任意のスレッド |
 | `cuda::thread_scope::thread_scope_device` | 開始したスレッドと同じGPUデバイス内の任意のスレッド |
-| `cuda::thread_scope::thread_scope_device` | 開始したスレッドと同じシステム内の任意のスレッド |
+| `cuda::thread_scope::thread_scope_system` | 開始したスレッドと同じシステム内の任意のスレッド |
 
 これらのスレッドスコープはCUDA標準C++ライブラリ内の標準C++の拡張として定義されている。
 
