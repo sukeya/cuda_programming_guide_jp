@@ -669,15 +669,15 @@ Independent Thread Schedulingを実装しつつ移植するためには、Volta�
 <h3 id="_5">初期化</h3>
 <p>CUDA 12.0から、<a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1gac04a5d82168676b20121ca870919419">cudaInitDevice</a>関数と<a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1g159587909ffa0791bbe4b40187a4c6bb">cudaSetDevice</a>関数は指定されたデバイスに紐付いた、ランタイムと<a href="https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__PRIMARY__CTX.html#group__CUDA__PRIMARY__CTX">プライマリーコンテキスト</a>を初期化する。これらの関数呼び出しがないと、他のランタイムAPIリクエストを処理する必要がある時にランタイムは暗にデバイス<code>0</code>を使い、自身を初期化する。ランタイムの関数呼び出しの時間計測とランタイムへの最初の関数呼び出しからのエラーコードを解釈するときに心に留めておく必要がある。12.0以前では、<code>cudaSetDevice</code>関数はランタイムを初期化せず、アプリケーションは(時間計測とエラーハンドリングのために)他のAPI呼び出しからランタイムの初期化を切り離す、何もしない関数呼び出し<code>cudaFree(0)</code>をよく使っていた。</p>
 <p>compute capabilityが2.0以上のデバイスの数は<a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1g18808e54893cfcaafefeab31a73cc55f">cudaGetDeviceCount</a>関数でわかる。デバイス番号は0から始まり、デバイス数未満までである。</p>
-<p>プライマリーコンテキストは、確保されたメモリのリストやデバイスコードを含む、ロードされたモジュールなどデバイスを制御するデータ全てを持つ^[https://stackoverflow.com/questions/43244645/what-is-a-cuda-context]。プライマリーコンテキストはデバイス毎に1つしかなく、CUDAランタイムAPIと共有される。つまり、アプリケーションのすべてのホストスレッドで共有される。このコンテキストを作成する時、必要ならデバイスコードをjust-in-timeコンパイルする。詳しくは、<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#context">コンテキスト</a>にて。</p>
+<p>プライマリーコンテキストは、確保されたメモリのリストやデバイスコードを含む、ロードされたモジュールなどデバイスを制御するデータ全てを持つ<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>。プライマリーコンテキストはデバイス毎に1つしかなく、CUDAランタイムAPIと共有される。つまり、アプリケーションのすべてのホストスレッドで共有される。このコンテキストを作成する時、必要ならデバイスコードをjust-in-timeコンパイルする。詳しくは、<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#context">コンテキスト</a>にて。</p>
 <p>ホストスレッドが<a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1gef69dd5c6d0206c2b8d099abac61f217">cudaDeviceReset</a>関数を呼び出した場合、ホストスレッドが現在操作しているデバイスのプライマリーコンテキストを破棄する。</p>
-<p>:::message
-CUDAインターフェイスはホストプログラムの開始時に初期化され、ホストプログラムの終了時に破棄されるグローバルな状態を持つ。CUDAランタイムとドライバーはこの状態が無効かどうかを検出できないので、明示的か暗黙的かに関わらず、プログラムの開始時と終了時にこれらのインターフェイスを使うと未定義動作になる。</p>
-<p>CUDA 12.0時点では、<code>cudaSetDevice()</code>はホストスレッドの現在のデバイスを変更後にランタイムを明示的に初期化する。以前のバージョンのCUDAでは、<code>cudaSetDevice()</code>が呼び出されてから初めてランタイムの関数が呼ばれるまで、新しいデバイス上のランタイムの初期化を遅延していた。この変更により、初期化のエラーを<code>cudaSetDevice()</code>の戻り値で確認することがとても重要になった。</p>
-<p>エラー処理とバージョン管理のランタイム関数はランタイムを初期化しない。
-:::</p>
+<p>!!!　note "注"</p>
+<div class="language-text highlight"><pre><span></span><code>CUDAインターフェイスはホストプログラムの開始時に初期化され、ホストプログラムの終了時に破棄されるグローバルな状態を持つ。CUDAランタイムとドライバーはこの状態が無効かどうかを検出できないので、明示的か暗黙的かに関わらず、プログラムの開始時と終了時にこれらのインターフェイスを使うと未定義動作になる。
+CUDA 12.0時点では、`cudaSetDevice()`はホストスレッドの現在のデバイスを変更後にランタイムを明示的に初期化する。以前のバージョンのCUDAでは、`cudaSetDevice()`が呼び出されてから初めてランタイムの関数が呼ばれるまで、新しいデバイス上のランタイムの初期化を遅延していた。この変更により、初期化のエラーを`cudaSetDevice()`の戻り値で確認することがとても重要になった。
+エラー処理とバージョン管理のランタイム関数はランタイムを初期化しない。
+</code></pre></div>
 <h3 id="_6">デバイスメモリ</h3>
-<p>CUDAのプログラムモデルはそれぞれ自身のメモリを持つホストとデバイスからなるシステムを仮定している。カーネルはデバイスメモリの外から操作するので、ランタイムはホストメモリとデバイスメモリ間のデータ転送を行う関数だけでなく、デバイスメモリの確保、解放、デバイスメモリのコピーを行う関数も提供している。</p>
+<p>CUDAのプログラムモデルは各々のメモリを持つホストとデバイスからなるシステムを仮定している。カーネルはデバイスメモリの外から操作するので、ランタイムはホストメモリとデバイスメモリ間のデータ転送を行う関数だけでなく、デバイスメモリの確保、解放、デバイスメモリ内のコピーを行う関数も提供している。</p>
 <p>デバイスメモリは線形メモリ(linear memory)かCUDA配列(CUDA array)のどちらかとして確保される。</p>
 <p>CUDA配列はテクスチャフェッチのために最適化された不透明なメモリレイアウトである。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#texture-and-surface-memory">テクスチャとサーフェスメモリー</a>にて。</p>
 <p>線形メモリは一つの統一されたメモリ空間にアロケートされる。つまり、例えば2分木やリンクリストで、別々にアロケーションされたものをポインターを通してお互いに参照することが出来る。
@@ -1304,6 +1304,14 @@ CUDAインターフェイスはホストプログラムの開始時に初期化�
 <h3 id="_13">コールスタック</h3>
 <h3 id="_14">テクスチャとサーフェスメモリ</h3>
 <h3 id="_15">グラフィックとの相互運用性</h3>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>https://stackoverflow.com/questions/43244645/what-is-a-cuda-context&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1326,7 +1334,7 @@ CUDAインターフェイスはホストプログラムの開始時に初期化�
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-20</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-23</span>
   </span>
 
     
