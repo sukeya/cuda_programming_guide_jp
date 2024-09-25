@@ -39,3 +39,5 @@ function(add_cuda exe_name)
   )
   set_property(TARGET ${exe_name} PROPERTY CUDA_SEPARABLE_COMPILATION ON)
 endfunction()
+
+add_subdirectory(src)
