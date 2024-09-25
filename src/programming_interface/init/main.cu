@@ -24,5 +24,8 @@ int main() {
     unsigned int current_flags;
     e = cudaGetDeviceFlags(&current_flags);
     assert(e == cudaSuccess);
+    // Flags returned by this function may specifically include cudaDeviceMapHost
+    // even though it is not accepted by cudaSetDeviceFlags because it is implicit
+    // in runtime API flags.
     assert((current_flags & device_flags) == device_flags);
 }
