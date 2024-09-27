@@ -1,0 +1,940 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/device_memory_l2_access_management/">
+      
+      
+        <link rel="prev" href="../device_memory/">
+      
+      
+        <link rel="next" href="../shared_memory/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+    
+    
+      
+        <title>デバイスメモリのL2アクセス管理 - CUDAプログラミングガイド 日本語解説</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#デバイスメモリのl2アクセス管理" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="CUDAプログラミングガイド 日本語解説" class="md-header__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CUDAプログラミングガイド 日本語解説
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              デバイスメモリのL2アクセス管理
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sukeya/cuda_programming_guide_jp" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sukeya/cuda_programming_guide_jp
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="CUDAプログラミングガイド 日本語解説" class="md-nav__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CUDAプログラミングガイド 日本語解説
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sukeya/cuda_programming_guide_jp" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sukeya/cuda_programming_guide_jp
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    概要
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../programming_model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    プログラミングモデル
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    プログラミングインターフェイス
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            プログラミングインターフェイス
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../to_compile_with_nvcc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    NVCCを使ったコンパイル
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    CUDAランタイム
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            CUDAランタイム
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../initialization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    初期化
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device_memory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    デバイスメモリ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    デバイスメモリのL2アクセス管理
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    デバイスメモリのL2アクセス管理
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#持続的なアクセスのためのl2キャッシュ" class="md-nav__link">
+    <span class="md-ellipsis">
+      持続的なアクセスのためのL2キャッシュ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#持続的なアクセスのためのl2キャッシュポリシー" class="md-nav__link">
+    <span class="md-ellipsis">
+      持続的なアクセスのためのL2キャッシュポリシー
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l2アクセスプロパティ" class="md-nav__link">
+    <span class="md-ellipsis">
+      L2アクセスプロパティ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l2持続の例" class="md-nav__link">
+    <span class="md-ellipsis">
+      L2持続の例
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l2アクセスを通常へリセット" class="md-nav__link">
+    <span class="md-ellipsis">
+      L2アクセスを通常へリセット
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#取っておいたl2キャッシュの使用管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      取っておいたL2キャッシュの使用管理
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#l2キャッシュプロパティのクエリ" class="md-nav__link">
+    <span class="md-ellipsis">
+      L2キャッシュプロパティのクエリ
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#持続的なメモリアクセスのために取っておくl2キャッシュのサイズの管理" class="md-nav__link">
+    <span class="md-ellipsis">
+      持続的なメモリアクセスのために取っておくL2キャッシュのサイズの管理
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../shared_memory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    共有メモリ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../distributed_shared_memory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    分散共有メモリ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../page_locked_host_memory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ページロックされたホストメモリ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/sukeya/cuda_programming_guide_jp/blob/main/docs/programming_interface/cuda_runtime/device_memory_l2_access_management.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="デバイスメモリのl2アクセス管理">デバイスメモリのL2アクセス管理<a class="headerlink" href="#デバイスメモリのl2アクセス管理" title="Permanent link">&para;</a></h1>
+<p>CUDAカーネルがグローバルメモリ内のデータ領域に繰り返しアクセスするとき、そのようなデータアクセスは持続している(persisting)と考えられる。一方で、一回しかデータにアクセスしないなら、そのようなデータアクセスはストリーミングと考えられる。</p>
+<p>CUDA 11.0から、compute capabilityが8.0以上のデバイスはL2キャッシュのデータの持続性に影響を与えることが出来る。これはグローバルメモリへの高い帯域幅と低レイテンシなアクセスを提供する可能性がある。</p>
+<h2 id="持続的なアクセスのためのl2キャッシュ">持続的なアクセスのためのL2キャッシュ<a class="headerlink" href="#持続的なアクセスのためのl2キャッシュ" title="Permanent link">&para;</a></h2>
+<p>L2キャッシュの一部はグローバルメモリへの持続的なデータアクセスのために取っておくことが出来る。持続的なアクセスはこの分けられたL2キャッシュの一部を優先的に使え、グローバルメモリへの通常のアクセスとストリーミングアクセスは持続的なアクセスで使われない時だけしか、このキャッシュを利用できない。</p>
+<p>持続的なアクセスのためのL2キャッシュのサイズは制限内で調整できる。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">cudaGetDeviceProperties</span><span class="p">(</span><span class="o">&amp;</span><span class="n">prop</span><span class="p">,</span><span class="w"> </span><span class="n">device_id</span><span class="p">);</span><span class="w">                </span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">prop</span><span class="p">.</span><span class="n">l2CacheSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.75</span><span class="p">),</span><span class="w"> </span><span class="n">prop</span><span class="p">.</span><span class="n">persistingL2CacheMaxSize</span><span class="p">);</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">cudaDeviceSetLimit</span><span class="p">(</span><span class="n">cudaLimitPersistingL2CacheSize</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span><span class="w"> </span><span class="cm">/* set-aside 3/4 of L2 cache for persisting accesses or the max allowed*/</span><span class="w"> </span>
+</span></code></pre></div>
+<p>GPUがマルチインスタンスGPU(MIG)モードの場合はこの機能を利用できない。</p>
+<p>マルチプロセスサービス(MPS)を使っている時、分けられたL2キャッシュのサイズを<code>cudaDeviceSetLimit</code>で変更できない。その代わりに、このサイズは環境変数<code>CUDA_DEVICE_DEFAULT_PERSISTING_L2_CACHE_PERCENTAGE_LIMIT</code>を使ってMPSサーバーの立ち上げ時にのみ指定できる。</p>
+<h2 id="持続的なアクセスのためのl2キャッシュポリシー">持続的なアクセスのためのL2キャッシュポリシー<a class="headerlink" href="#持続的なアクセスのためのl2キャッシュポリシー" title="Permanent link">&para;</a></h2>
+<p>アクセスポリシーウィンドウはグローバルメモリの連続した領域とその領域内へのアクセスに対するL2キャッシュの持続性を指定する。</p>
+<p>以下のコード例はCUDAストリームを使ったL2キャッシュへの持続的なアクセスのウィンドウの設定の仕方を示す。</p>
+<p><strong>CUDA Stream Example</strong>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">cudaStreamAttrValue</span><span class="w"> </span><span class="n">stream_attribute</span><span class="p">;</span><span class="w">                                         </span><span class="c1">// Stream level attributes data structure</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">base_ptr</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span><span class="w"> </span><span class="c1">// Global Memory data pointer</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">num_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_bytes</span><span class="p">;</span><span class="w">                    </span><span class="c1">// Number of bytes for persistence access.</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">                                                                              </span><span class="c1">// (Must be less than cudaDeviceProp::accessPolicyMaxWindowSize)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitRatio</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">0.6</span><span class="p">;</span><span class="w">                          </span><span class="c1">// Hint for cache hit ratio</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitProp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyPersisting</span><span class="p">;</span><span class="w"> </span><span class="c1">// Type of access property on cache hit</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">missProp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyStreaming</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type of access property on cache miss.</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">//Set the attributes to a CUDA stream of type cudaStream_t</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">cudaStreamSetAttribute</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">cudaStreamAttributeAccessPolicyWindow</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">stream_attribute</span><span class="p">);</span>
+</span></code></pre></div></p>
+<p>この後にカーネルがCUDAストリームで実行しているとき、グローバルメモリの<code>[ptr, ptr + num_byte)</code>内のメモリアクセスはグローバルメモリの他の場所へのアクセスよりL2キャッシュ内で持続しやすくなる。</p>
+<p>以下の例のように、L2持続性はCUDAグラフカーネルノードに対しても設定できる。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">cudaKernelNodeAttrValue</span><span class="w"> </span><span class="n">node_attribute</span><span class="p">;</span><span class="w">                                     </span><span class="c1">// Kernel level attributes data structure</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">node_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">base_ptr</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span><span class="w"> </span><span class="c1">// Global Memory data pointer</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">node_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">num_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_bytes</span><span class="p">;</span><span class="w">                    </span><span class="c1">// Number of bytes for persistence access.</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">                                                                            </span><span class="c1">// (Must be less than cudaDeviceProp::accessPolicyMaxWindowSize)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">node_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitRatio</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">0.6</span><span class="p">;</span><span class="w">                          </span><span class="c1">// Hint for cache hit ratio</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">node_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitProp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyPersisting</span><span class="p">;</span><span class="w"> </span><span class="c1">// Type of access property on cache hit</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">node_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">missProp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyStreaming</span><span class="p">;</span><span class="w">  </span><span class="c1">// Type of access property on cache miss.</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">//Set the attributes to a CUDA Graph Kernel node of type cudaGraphNode_t</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">cudaGraphKernelNodeSetAttribute</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">cudaKernelNodeAttributeAccessPolicyWindow</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node_attribute</span><span class="p">);</span>
+</span></code></pre></div>
+<p><code>hitRatio</code>パラメータは<code>accessPolicyWindow</code>の<code>num_bytes</code>ほどのデータを持続的アクセスのために取っておいたキャッシュに載せる割合を表す。</p>
+<p>例えば、取っておいたL2キャッシュが16KBで、<code>accessPolicyWindow</code>の<code>num_bytes</code>が32KBとする。</p>
+<ul>
+<li><code>hitRatio</code>が0.5の時、ハードウェアはランダムに32KBのウィンドウから16KBを選び、それらを持続すると指定し、取っておいたL2キャッシュにキャッシュする。</li>
+<li><code>hitRatio</code>が1の時、ハードウェアは32KBのウィンドウ全体を取っておいたL2キャッシュにキャッシュしようとする。取っておいたキャッシュはウィンドウより小さいので、キャッシュラインは32KBのデータの内、最も最近に使われた16KBを保持するよう削除される。</li>
+</ul>
+<p>あるメモリアクセスが持続的かどうかは<code>hitRatio</code>の確率でランダムで、確率分布はハードウェアアーキテクチャとそのメモリサイズに依存する。</p>
+<p><code>hitRatio</code>はキャッシュのスラッシングを避けるために使われる。</p>
+<p>1.0未満の<code>hitRatio</code>は、並列なCUDAストリームの異なる<code>accessPolicyWindow</code>がL2キャッシュでキャッシュできるデータ量をコントロールするために使うことが出来る。例えば、取っておいたL2キャッシュが16KBで、2つの異なるCUDAストリームの並列なカーネルが16KBの<code>accessPolicyWindow</code>を持ち、どちらも<code>hitRatio</code>が1.0とすると、共有するL2キャッシュで競合した時にお互いのキャッシュラインを削除するかもしれない。しかし、両方の<code>hitRatio</code>が0.5なら、自分自身やお互いの持続的なキャッシュラインを消しにくくなる。</p>
+<h2 id="l2アクセスプロパティ">L2アクセスプロパティ<a class="headerlink" href="#l2アクセスプロパティ" title="Permanent link">&para;</a></h2>
+<p>3種類のアクセスプロパティがグローバルメモリの異なるデータへのアクセスに対して定義されている。</p>
+<table>
+<thead>
+<tr>
+<th>アクセスプロパティ</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cudaAccessPropertyStreaming</code></td>
+<td>L2キャッシュに残りにくくする</td>
+</tr>
+<tr>
+<td><code>cudaAccessPropertyPersisting</code></td>
+<td>L2キャッシュに残りやすくする</td>
+</tr>
+<tr>
+<td><code>cudaAccessPropertyNormal</code></td>
+<td>以前適用された、持続的なアクセスプロパティを通常の状態に戻す</td>
+</tr>
+</tbody>
+</table>
+<p><code>cudaAccessPropertyPersisting</code>を持つメモリアクセスは要らなくなってもL2キャッシュに残るため、利用可能なL2キャッシュの量が減ってしまう。そのため、<code>cudaAccessPropertyNormal</code>でリセットする。</p>
+<h2 id="l2持続の例">L2持続の例<a class="headerlink" href="#l2持続の例" title="Permanent link">&para;</a></h2>
+<p>以下の例は持続的なアクセスのためのL2キャッシュの取り方とCUDAストリームを使ったCUDAカーネルでの取っておいたL2キャッシュの使い方、そしてそのキャッシュのリセット方法を示す。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">cudaStream_t</span><span class="w"> </span><span class="n">stream</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">cudaStreamCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stream</span><span class="p">);</span><span class="w">                                                                  </span><span class="c1">// Create CUDA stream</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">cudaDeviceProp</span><span class="w"> </span><span class="n">prop</span><span class="p">;</span><span class="w">                                                                        </span><span class="c1">// CUDA device properties variable</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">cudaGetDeviceProperties</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">prop</span><span class="p">,</span><span class="w"> </span><span class="n">device_id</span><span class="p">);</span><span class="w">                                                 </span><span class="c1">// Query GPU properties</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="n">prop</span><span class="p">.</span><span class="n">l2CacheSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.75</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">prop</span><span class="p">.</span><span class="n">persistingL2CacheMaxSize</span><span class="w"> </span><span class="p">);</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">cudaDeviceSetLimit</span><span class="p">(</span><span class="w"> </span><span class="n">cudaLimitPersistingL2CacheSize</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span><span class="w">                                  </span><span class="c1">// set-aside 3/4 of L2 cache for persisting accesses or the max allowed</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="kt">size_t</span><span class="w"> </span><span class="n">window_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">prop</span><span class="p">.</span><span class="n">accessPolicyMaxWindowSize</span><span class="p">,</span><span class="w"> </span><span class="n">num_bytes</span><span class="p">);</span><span class="w">                        </span><span class="c1">// Select minimum of user defined num_bytes and max window size.</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">cudaStreamAttrValue</span><span class="w"> </span><span class="n">stream_attribute</span><span class="p">;</span><span class="w">                                                       </span><span class="c1">// Stream level attributes data structure</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">base_ptr</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">data1</span><span class="p">);</span><span class="w">               </span><span class="c1">// Global Memory data pointer</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">num_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">window_size</span><span class="p">;</span><span class="w">                                </span><span class="c1">// Number of bytes for persistence access</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitRatio</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">0.6</span><span class="p">;</span><span class="w">                                        </span><span class="c1">// Hint for cache hit ratio</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">hitProp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyPersisting</span><span class="p">;</span><span class="w">               </span><span class="c1">// Persistence Property</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">missProp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">cudaAccessPropertyStreaming</span><span class="p">;</span><span class="w">                </span><span class="c1">// Type of access property on cache miss</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="n">cudaStreamSetAttribute</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">cudaStreamAttributeAccessPolicyWindow</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">stream_attribute</span><span class="p">);</span><span class="w">   </span><span class="c1">// Set the attributes to a CUDA Stream</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="n">cuda_kernelA</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid_size</span><span class="p">,</span><span class="n">block_size</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">stream</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">data1</span><span class="p">);</span><span class="w">                                 </span><span class="c1">// This data1 is used by a kernel multiple times</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="p">}</span><span class="w">                                                                                           </span><span class="c1">// [data1 + num_bytes) benefits from L2 persistence</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="n">cuda_kernelB</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid_size</span><span class="p">,</span><span class="n">block_size</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">stream</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">data1</span><span class="p">);</span><span class="w">                                     </span><span class="c1">// A different kernel in the same stream can also benefit</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">                                                                                            </span><span class="c1">// from the persistence of data1</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="n">stream_attribute</span><span class="p">.</span><span class="n">accessPolicyWindow</span><span class="p">.</span><span class="n">num_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                                          </span><span class="c1">// Setting the window size to 0 disable it</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="n">cudaStreamSetAttribute</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span><span class="w"> </span><span class="n">cudaStreamAttributeAccessPolicyWindow</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">stream_attribute</span><span class="p">);</span><span class="w">   </span><span class="c1">// Overwrite the access policy attribute to a CUDA Stream</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="n">cudaCtxResetPersistingL2Cache</span><span class="p">();</span><span class="w">                                                            </span><span class="c1">// Remove any persistent lines in L2</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="n">cuda_kernelC</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid_size</span><span class="p">,</span><span class="n">block_size</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">stream</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">data2</span><span class="p">);</span><span class="w">                                     </span><span class="c1">// data2 can now benefit from full L2 in normal mode</span>
+</span></code></pre></div>
+<h2 id="l2アクセスを通常へリセット">L2アクセスを通常へリセット<a class="headerlink" href="#l2アクセスを通常へリセット" title="Permanent link">&para;</a></h2>
+<p>リセットする方法は3つある。</p>
+<ol>
+<li>以前の持続的なメモリ領域を<code>cudaAccessPropertyNormal</code>アクセスプロパティでリセットする。</li>
+<li><code>cudaCtxResetPersistingL2Cache()</code>を呼び出して、全ての持続的なL2キャッシュラインをリセットする。</li>
+<li>たまたま触っていないラインが自動的に通常に戻る。自動で戻るのにどれくらい時間がかかるかわからないので非推奨。</li>
+</ol>
+<h2 id="取っておいたl2キャッシュの使用管理">取っておいたL2キャッシュの使用管理<a class="headerlink" href="#取っておいたl2キャッシュの使用管理" title="Permanent link">&para;</a></h2>
+<p>異なるCUDAストリームで並列に実行している複数のCUDAカーネルは自身のストリームに割り当てられた、異なるアクセスポリシーウィンドウを持つかもしれない。しかし、取っておいたL2キャッシュはこれら並列で実行されている全てのCUDAカーネルに共有される。よって、持続的なアクセスの量が取っておいたL2キャッシュの容量を超えた場合、メモリアクセスを持続的と指定したメリットが消える。</p>
+<p>取っておいたL2キャッシュの利用を管理するため、アプリケーションは以下を考えなければならない。
+- 取っておくL2キャッシュのサイズ
+- 並列に実行するかもしれないCUDAカーネルとそのアクセスポリシーウィンドウ
+- 通常またはストリーミングなアクセスが以前取っておいたL2キャッシュを同じ優先度で使えるように、いつ、どのようなL2リセットが必要か。</p>
+<h2 id="l2キャッシュプロパティのクエリ">L2キャッシュプロパティのクエリ<a class="headerlink" href="#l2キャッシュプロパティのクエリ" title="Permanent link">&para;</a></h2>
+<p>L2キャッシュに関連したプロパティは<code>cudaDeviceProp</code>構造体の一部にあり、<code>cudaGetDeviceProperties</code>関数で取得できる。</p>
+<p>CUDAデバイスプロパティは以下を含む。</p>
+<table>
+<thead>
+<tr>
+<th>プロパティ名</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>l2CacheSize</code></td>
+<td>GPU上で利用可能なL2キャッシュの容量</td>
+</tr>
+<tr>
+<td><code>persistingL2CacheMaxSize</code></td>
+<td>持続的なメモリアクセスのために取っておけるL2キャッシュの最大容量</td>
+</tr>
+<tr>
+<td><code>accessPolicyMaxWindowSize</code></td>
+<td>アクセスポリシーウィンドウの最大サイズ</td>
+</tr>
+</tbody>
+</table>
+<h2 id="持続的なメモリアクセスのために取っておくl2キャッシュのサイズの管理">持続的なメモリアクセスのために取っておくL2キャッシュのサイズの管理<a class="headerlink" href="#持続的なメモリアクセスのために取っておくl2キャッシュのサイズの管理" title="Permanent link">&para;</a></h2>
+<p>持続的なメモリアクセスのために取っておくL2キャッシュのサイズは<code>cudaDeviceGetLimit</code>関数を使って取得でき、<code>cudaDeviceSetLimit</code>関数に<a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html#group__CUDART__TYPES_1g4c4b34c054d383b0e9a63ab0ffc93651">cudaLimit</a>として渡すことで設定できる。最大値は<code>cudaDeviceProp::persistingL2CacheMaxSize</code>。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">enum</span><span class="w"> </span><span class="nc">cudaLimit</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="cm">/* other fields not shown */</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">cudaLimitPersistingL2CacheSize</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">};</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-27</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-27</span>
+  </span>
+
+    
+    
+    
+      
+  <span class="md-source-file__fact">
+    
+      
+  <span class="md-icon" title="Contributors">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </span>
+  <span>GitHub</span>
+
+    
+    <nav>
+      
+        <a href="https://github.com/sukeya" class="md-author" title="@sukeya">
+          
+          <img src="https://avatars.githubusercontent.com/u/64895419?v=4&size=72" alt="sukeya">
+        </a>
+      
+      
+      
+    </nav>
+  </span>
+
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.action.edit", "toc.integrate", "navigation.top", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      
+    
+  </body>
+</html>

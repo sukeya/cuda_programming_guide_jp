@@ -8,25 +8,25 @@
       
       
       
-        <link rel="canonical" href="https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/">
+        <link rel="canonical" href="https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/to_compile_with_nvcc/">
       
       
-        <link rel="prev" href="../programming_model/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="to_compile_with_nvcc/">
+        <link rel="next" href="../cuda_runtime/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
-        <title>プログラミングインターフェイス - CUDAプログラミングガイド 日本語解説</title>
+        <title>NVCCを使ったコンパイル - CUDAプログラミングガイド 日本語解説</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
       
       
 
@@ -45,7 +45,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#プログラミングインターフェイス" class="md-skip">
+        <a href="#nvccを使ったコンパイル" class="md-skip">
           Skip to content
         </a>
       
@@ -80,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="CUDAプログラミングガイド 日本語解説" class="md-header__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
+    <a href="../.." title="CUDAプログラミングガイド 日本語解説" class="md-header__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              プログラミングインターフェイス
+              NVCCを使ったコンパイル
             
           </span>
         </div>
@@ -189,7 +189,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="CUDAプログラミングガイド 日本語解説" class="md-nav__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
+    <a href="../.." title="CUDAプログラミングガイド 日本語解説" class="md-nav__button md-logo" aria-label="CUDAプログラミングガイド 日本語解説" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -219,7 +219,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -239,7 +239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../programming_model/" class="md-nav__link">
+      <a href="../../programming_model/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -283,7 +283,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -294,7 +294,7 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -313,10 +313,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="to_compile_with_nvcc/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    NVCCを使ったコンパイル
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -325,6 +345,104 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#コンパイルワークフロー" class="md-nav__link">
+    <span class="md-ellipsis">
+      コンパイルワークフロー
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="コンパイルワークフロー">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#オフラインコンパイル" class="md-nav__link">
+    <span class="md-ellipsis">
+      オフラインコンパイル
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#just-in-timeコンパイル" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just-in-Timeコンパイル
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#バイナリ互換性" class="md-nav__link">
+    <span class="md-ellipsis">
+      バイナリ互換性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ptx互換性" class="md-nav__link">
+    <span class="md-ellipsis">
+      PTX互換性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#アプリケーション互換性" class="md-nav__link">
+    <span class="md-ellipsis">
+      アプリケーション互換性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c互換性" class="md-nav__link">
+    <span class="md-ellipsis">
+      C++互換性
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64ビット互換性" class="md-nav__link">
+    <span class="md-ellipsis">
+      64ビット互換性
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -367,7 +485,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="cuda_runtime/" class="md-nav__link ">
+            <a href="../cuda_runtime/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -400,7 +518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/initialization/" class="md-nav__link">
+      <a href="../cuda_runtime/initialization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -421,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/device_memory/" class="md-nav__link">
+      <a href="../cuda_runtime/device_memory/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -442,7 +560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/device_memory_l2_access_management/" class="md-nav__link">
+      <a href="../cuda_runtime/device_memory_l2_access_management/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -463,7 +581,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/shared_memory/" class="md-nav__link">
+      <a href="../cuda_runtime/shared_memory/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -484,7 +602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/distributed_shared_memory/" class="md-nav__link">
+      <a href="../cuda_runtime/distributed_shared_memory/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -505,7 +623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cuda_runtime/page_locked_host_memory/" class="md-nav__link">
+      <a href="../cuda_runtime/page_locked_host_memory/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -549,7 +667,7 @@
                   
 
   
-    <a href="https://github.com/sukeya/cuda_programming_guide_jp/blob/main/docs/programming_interface/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/sukeya/cuda_programming_guide_jp/blob/main/docs/programming_interface/to_compile_with_nvcc.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -557,13 +675,66 @@
   
 
 
-<h1 id="プログラミングインターフェイス">プログラミングインターフェイス<a class="headerlink" href="#プログラミングインターフェイス" title="Permanent link">&para;</a></h1>
-<p>CUDAランタイムは低級なC APIであるCUDAドライバーAPIの上に作られている。CUDAドライバーAPIもアプリケーションから利用できる。このAPIは、</p>
+<h1 id="nvccを使ったコンパイル">NVCCを使ったコンパイル<a class="headerlink" href="#nvccを使ったコンパイル" title="Permanent link">&para;</a></h1>
+<p>カーネルはPTXと呼ばれる、CUDAの命令セットを使って書くこともできる。しかし、普通はC++のような高級言語を使ったほうがより効率的である。どちらにしろ、カーネルは<code>nvcc</code>を使ってデバイス上で実行されるバイナリコードにコンパイルされる必要がある。</p>
+<p><code>nvcc</code>はC++やPTXコードのコンパイルを単純にするコンパイルドライバーである。これは単純で親しみ深いコマンドを提供し、異なるコンパイルステージを実装するツールを呼び出して実行する。この節では<code>nvcc</code>ワークフローの概要とコマンドオプションの概要を述べる。</p>
+<p>詳しくは<a href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html">NVIDIA CUDA Compiler Driver NVCC</a>にて。</p>
+<h2 id="コンパイルワークフロー">コンパイルワークフロー<a class="headerlink" href="#コンパイルワークフロー" title="Permanent link">&para;</a></h2>
+<p><img alt="" src="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/_images/cuda-compilation-from-cu-to-executable.png" /></p>
+<h3 id="オフラインコンパイル">オフラインコンパイル<a class="headerlink" href="#オフラインコンパイル" title="Permanent link">&para;</a></h3>
+<p><code>nvcc</code>によってコンパイルされるソースファイルはホストコードとデバイスコードを含みうる。<code>nvcc</code>の基本的なワークフローは</p>
+<ol>
+<li>ホストコードからデバイスコードを分け、</li>
+<li>デバイスコードをアセンブリ形式(PTXコード)かバイナリ形式(cubinオブジェクト)にコンパイルし、</li>
+<li>ホストコードでカーネルに指定された<code>&lt;&lt;&lt;...&gt;&gt;&gt;</code>を、PTXコードやcubinオブジェクトからコンパイルされたカーネルを読み込んで起動するために必要なCUDAランタイム関数の呼び出しに置き換える</li>
+</ol>
+<p>ことである。</p>
+<p>修正されたホストコードは他のツールを使ってコンパイルできるようにC++コードとして出力されるか、最後のコンパイルステージで<code>nvcc</code>にホストコンパイラを呼び出させることでオブジェクトコードとして直接出力される。</p>
+<p>アプリケーションは、</p>
 <ul>
-<li>CUDAコンテキスト - ホストプロセスのデバイス版</li>
-<li>CUDAモジュール - 動的リンクライブラリのデバイス版</li>
+<li>コンパイルされたホストコードをリンクするか、</li>
+<li>修正されたホストコードを無視して、PTXコードかcubinオブジェクトをロードし、実行するためにCUDAドライバーAPIを使う (詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#driver-api">ドライバーAPI</a>にて)。</li>
 </ul>
-<p>といった低級な概念を提供する。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#driver-api">ドライバーAPI</a>にて。</p>
+<h3 id="just-in-timeコンパイル">Just-in-Timeコンパイル<a class="headerlink" href="#just-in-timeコンパイル" title="Permanent link">&para;</a></h3>
+<p>実行時にアプリケーションにロードされるPTXコードは、デバイスドライバーによってバイナリコードにコンパイルされる。これはjust-in-timeコンパイルと呼ばれる。just-in-timeコンパイルはアプリケーションのロードタイムを増やすが、アプリケーションが新しいコンパイラーの改善を享受できるようになる。また、この方法はアプリケーションがコンパイルされた時に存在しなかったデバイス上で実行するための唯一の方法である。詳しくは<a href="#アプリケーション互換性">アプリケーション互換性</a>にて。</p>
+<p>デバイスドライバーはアプリケーションのPTXコードをjust-in-timeコンパイルする時、アプリケーションの呼び出し毎にコンパイルしないように、生成したバイナリコードのコピーを自動的にキャッシュする。(compute cacheと呼ばれる)このキャッシュはデバイスドライバーがアップグレードされた時に自動的に無効になるので、アプリケーションはデバイスドライバーに組み込まれた新しいjust-in-timeコンパイラーの改善を享受することが出来る。</p>
+<p>環境変数を使うと、just-in-timeコンパイルをコントロールできる。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#env-vars">CUDAの環境変数</a>にて。</p>
+<p>CUDA C++デバイスコードをコンパイルするために<code>nvcc</code>を使う代わりとして、実行時にCUDA C++デバイスコードをPTXにコンパイルするNVRTCを使うことが出来る。NVRTCはCUDA C++の実行時コンパイルライブラリである。</p>
+<h2 id="バイナリ互換性">バイナリ互換性<a class="headerlink" href="#バイナリ互換性" title="Permanent link">&para;</a></h2>
+<p>バイナリコードはアーキテクチャ特有である。cubinオブジェクトは対象アーキテクチャを指定するコンパイラーオプション<code>-code</code>を使って生成される。例えば、<code>-code=sm_80</code>を付けてコンパイルすると、compute capability 8.0のデバイスに対するバイナリコードが作られる。compute capability X.yに対して生成されたcubinオブジェクトはcompute capability X.z(z&gt;=y)のデバイス上でしか実行できない。</p>
+<div class="admonition note">
+<p class="admonition-title">注</p>
+<p>バイナリ互換性はデスクトップのみサポートする。Tegraに対してはサポートされず、デスクトップとTegra間のバイナリ互換性もサポートされない。</p>
+</div>
+<h2 id="ptx互換性">PTX互換性<a class="headerlink" href="#ptx互換性" title="Permanent link">&para;</a></h2>
+<p>いくつかのPTX命令は高いcompute capabilityを持つデバイス上でしかサポートされない。例えば、warpシャッフル関数はcompute capabilityが5.0以上のデバイス上でしかサポートされない。<code>-arch</code>コンパイラーオプションにはC++をPTXコードにコンパイルする時に必要なcompute capabilityを指定する。例えば、warpシャッフルを含むコードは<code>-arch=compute_50</code>(かそれ以上)を付けてコンパイルされなければならない。</p>
+<p>ある特定のcompute capabilityに対して作られたPTXコードは必ずそれ以上のcompute capabilityを持つバイナリコードにコンパイルされる。以前のPTXのバージョンからコンパイルされたバイナリはいくつかのハードウェアの特徴を利用しないかもしれないので、最終的なバイナリは最新のPTXを使って生成されたバイナリより性能が悪いかもしれない。</p>
+<p>compute capabilityは仮想アーキテクチャとも呼ばれ、プリプロセスとPTXへのコンパイルをコントロールするために使われる。そのため、<code>-arch</code>オプションだけを指定しても実行ファイルやライブラリを作れず、<code>-code</code>オプションで物理アーキテクチャを指定しなければならない。</p>
+<h2 id="アプリケーション互換性">アプリケーション互換性<a class="headerlink" href="#アプリケーション互換性" title="Permanent link">&para;</a></h2>
+<p>特定のcompute capabilityのデバイス上でコードを実行するためには、アプリケーションはこのcompute capabilityと互換性のあるバイナリかPTXコードをロードしなければならない。特に、高いcompute capabilityを持つ、将来のアーキテクチャ上でコードを実行できるようにするためには、アプリケーションはこれらのデバイスに対してjust-in-timeでコンパイルされるPTXコードをロードしなければならない。</p>
+<p>どのPTXとバイナリコードがCUDA C++アプリケーションに埋め込まれるかはコンパイルオプション<code>-arch</code>と<code>-code</code>または<code>gencode</code>によって制御される。例えば、</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>nvcc x.cu
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        -gencode arch=compute_50,code=sm_50
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        -gencode arch=compute_60,code=sm_60
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        -gencode arch=compute_70,code=\&quot;compute_70,sm_70\&quot;
+</span></code></pre></div>
+<p>とすると、最初と2番目の<code>-gencode</code>オプションからcompute capability 5.0と6.0に互換性があるバイナリコードと、3番目の<code>-gencode</code>オプションからcompute capability 7.0と互換性があるPTXとバイナリコードを埋め込む。</p>
+<p>ホストコードは実行時に最も適したコードを自動的に選ぶよう生成される。上の例では以下のようになる。</p>
+<ul>
+<li>compute capability 5.0と5.2を持つデバイスに対する5.0バイナリコード</li>
+<li>compute capability 6.0と6.1を持つデバイスに対する6.0バイナリコード</li>
+<li>compute capability 7.0と7.5を持つデバイスに対する7.0バイナリコード</li>
+<li>compute capabilityが8.0以上のデバイスに対する、実行時にバイナリコードにコンパイルされるPTXコード</li>
+</ul>
+<p>compute capabilityに基づいた様々なコードパスを区別するために<code>__CUDA_ARCH__</code>マクロを使うことが出来る。ただし、このマクロはデバイスコードでのみ定義されている。例えば、<code>-arch=compute_80</code>を付けてコンパイルするとき、<code>__CUDA_ARCH__</code>の値は<code>800</code>である。</p>
+<p>ドライバーAPIを使うアプリケーションは実行時に最適なコードを明示的にロードし実行できるようにコンパイルしなければならない。</p>
+<p>例えば、VoltaアーキテクチャはスレッドがGPU上でスケジュールされる方法を変えるIndependent Thread Schedulingを導入しているが、以前のアーキテクチャ内のSIMTスケジューリングの特定の振る舞いに依存するコードに対して、Independent Thread Schedulingは関係するスレッドの集合を変えるかもしれず、不正確な結果をもたらす。
+Independent Thread Schedulingを実装しつつ移植するためには、Volta開発者はコンパイルオプション<code>-arch=compute_60 -code=sm_70</code>をつけてPascalのスレッドスケジューリングに最適化すればよい。</p>
+<p><code>nvcc</code>ユーザーマニュアルは<code>-arch</code>、<code>-code</code>、<code>-gencode</code>コンパイラーオプションに対する様々な短縮形をリストにまとめている。例えば、<code>-arch=sm_70</code>は<code>-arch=compute_70 -code=compute_70,sm_70</code>の略である。</p>
+<h2 id="c互換性">C++互換性<a class="headerlink" href="#c互換性" title="Permanent link">&para;</a></h2>
+<p>コンパイラのフロントエンドはCUDAソースファイルをC++の文法に従って処理する。全てのC++の機能はホストコードに対してはサポートされるが、デバイスコードに対しては一部のみサポートされる。詳しくは<a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#c-cplusplus-language-support">C++言語サポート</a>にて。</p>
+<h2 id="64ビット互換性">64ビット互換性<a class="headerlink" href="#64ビット互換性" title="Permanent link">&para;</a></h2>
+<p>64bitバージョンの<code>nvcc</code>は64bitモード(つまりポインターが64bit)でデバイスコードをコンパイルする。64bitモードでコンパイルされたデバイスコードは64bitモードでコンパイルされたホストコードでしかサポートされない。</p>
 
 
 
@@ -596,7 +767,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-26</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-09-27</span>
   </span>
 
     
@@ -671,10 +842,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.action.edit", "toc.integrate", "navigation.top", "navigation.indexes"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.action.edit", "toc.integrate", "navigation.top", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>
