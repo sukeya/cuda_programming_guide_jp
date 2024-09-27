@@ -1,6 +1,6 @@
 # プログラミングモデル
 この章では、CUDAプログラミングモデルの背後にある主な概念を紹介する。
-詳細は、[プログラミングインターフェイス](./programming_interface.md)にて。
+詳細は、[プログラミングインターフェイス](./programming_interface/index.md)にて。
 この章で使われる、ベクトル加算のソースコードは[ここ](https://github.com/NVIDIA/cuda-samples/tree/master/Samples/0_Introduction/vectorAdd)にある。
 
 ## カーネル
