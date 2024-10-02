@@ -24,8 +24,8 @@ compute capabilityが2.0以上のデバイスの数は[cudaGetDeviceCount](https
     エラー処理とバージョン管理のランタイム関数はランタイムを初期化しない。
 
 ## 例
-``` cpp title="/src/programming_interface/init/main.cu" linenums="1"
---8<-- "./src/programming_interface/init/main.cu"
+``` cpp title="/src/programming_interface/initialization/main.cu" linenums="1"
+--8<-- "./src/programming_interface/initialization/main.cu"
 ```
 
 [^1]: [What is a CUDA context?](https://stackoverflow.com/questions/43244645/what-is-a-cuda-context)
