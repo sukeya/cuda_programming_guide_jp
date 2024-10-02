@@ -1,1 +1,2 @@
-add_subdirectory(init)
+add_subdirectory(initialization)
+add_subdirectory(device_memory)

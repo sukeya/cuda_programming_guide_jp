@@ -24,20 +24,27 @@ endif()
 set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
 set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
-function(add_cuda exe_name)
-  add_executable(${exe_name} ${exe_name}.cu)
+function(add_cuda exe_path)
+  cmake_path(RELATIVE_PATH exe_path BASE_DIRECTORY ${PROJECT_SOURCE_DIR}/src OUTPUT_VARIABLE target_name)
+  cmake_path(REPLACE_EXTENSION target_name "" OUTPUT_VARIABLE target_name)
+  string(REPLACE "/" "_" target_name ${target_name})
+
+  add_executable(${target_name} ${exe_path})
   target_link_libraries(
-    ${exe_name}
+    ${target_name}
     PRIVATE
       CUDA::cudart
   )
   target_compile_options(
-    ${exe_name}
+    ${target_name}
     PRIVATE
       "$<${gcc_like_cxx}:-Wall;-Wextra>"
       "$<${msvc_cxx}:/Wall>"
   )
-  set_property(TARGET ${exe_name} PROPERTY CUDA_SEPARABLE_COMPILATION ON)
+
+  cmake_path(GET exe_path FILENAME exe_name)
+  cmake_path(REPLACE_EXTENSION exe_name "" OUTPUT_VARIABLE exe_name)
+  set_target_properties(${target_name} PROPERTIES CUDA_SEPARABLE_COMPILATION ON OUTPUT_NAME ${exe_name})
 endfunction()
 
 add_subdirectory(src)
