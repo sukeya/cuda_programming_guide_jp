@@ -33,37 +33,13 @@ CUDA配列はテクスチャフェッチのために最適化された不透明�
 以下のコードサンプルでは、`column` * `row`の2次元配列をアロケートし、デバイスコード内で配列上をループする方法を示す。
 
 ```cpp title="/src/programming_interface/device_memory/add_2_matrices.cu" linenums="1"
---8<-- "./src/programming_interface/device_memory/add_2_matrices.cu:3:63"
+--8<-- "./src/programming_interface/device_memory/add_2_matrices.cu:3:35"
 ```
 
 以下のコードは、要素数が`width` * `height` * `depth`の3次元配列を確保するコードである。
 
-```cpp
-// Host code
-int width = 64, height = 64, depth = 64;
-cudaExtent extent = make_cudaExtent(width * sizeof(float),
-                                    height, depth);
-cudaPitchedPtr devPitchedPtr;
-cudaMalloc3D(&devPitchedPtr, extent);
-MyKernel<<<100, 512>>>(devPitchedPtr, width, height, depth);
-
-// Device code
-__global__ void MyKernel(cudaPitchedPtr devPitchedPtr,
-                         int width, int height, int depth)
-{
-    char* devPtr = devPitchedPtr.ptr;
-    size_t pitch = devPitchedPtr.pitch;
-    size_t slicePitch = pitch * height;
-    for (int z = 0; z < depth; ++z) {
-        char* slice = devPtr + z * slicePitch;
-        for (int y = 0; y < height; ++y) {
-            float* row = (float*)(slice + y * pitch);
-            for (int x = 0; x < width; ++x) {
-                float element = row[x];
-            }
-        }
-    }
-}
+```cpp title="/src/programming_interface/device_memory/add_2_tensors.cu" linenums="1"
+--8<-- "./src/programming_interface/device_memory/add_2_tensors.cu:3:39"
 ```
 
 リファレンスマニュアルには、`cudaMalloc()`で確保された線形メモリや`cudaMallocPitch()`や`cudaMalloc3D()`で確保された線形メモリ、CUDA配列、グローバルまたは定数メモリ空間で宣言された変数に対して確保されたメモリ間のコピーに使われる関数が色々ある。
