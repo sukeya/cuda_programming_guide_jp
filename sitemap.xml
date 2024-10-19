@@ -2,46 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_model/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/to_compile_with_nvcc/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/device_memory/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/device_memory_l2_access_management/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/distributed_shared_memory/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/initialization/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/page_locked_host_memory/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
     <url>
          <loc>https://sukeya.github.io/cuda_programming_guide_jp/programming_interface/cuda_runtime/shared_memory/</loc>
-         <lastmod>2024-10-03</lastmod>
+         <lastmod>2024-10-19</lastmod>
     </url>
 </urlset>
