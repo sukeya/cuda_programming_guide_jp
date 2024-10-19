@@ -46,20 +46,8 @@ CUDA配列はテクスチャフェッチのために最適化された不透明�
 
 以下のコードは、ランタイムAPIを使った、グローバル変数へアクセスする様々な方法を示す。
 
-```cpp
-__constant__ float constData[256];
-float data[256];
-cudaMemcpyToSymbol(constData, data, sizeof(data));
-cudaMemcpyFromSymbol(data, constData, sizeof(data));
-
-__device__ float devData;
-float value = 3.14f;
-cudaMemcpyToSymbol(devData, &value, sizeof(float));
-
-__device__ float* devPointer;
-float* ptr;
-cudaMalloc(&ptr, 256 * sizeof(float));
-cudaMemcpyToSymbol(devPointer, &ptr, sizeof(ptr));
+```cpp title="/src/programming_interface/device_memory/global_memory.cu" linenums="1"
+--8<-- "./src/programming_interface/device_memory/global_memory.cu:1:20"
 ```
 
 `cudaGetSymbolAddress()`はグローバルメモリ空間で宣言された変数に対して確保されたメモリを指すアドレスを取り出すために使われる。
