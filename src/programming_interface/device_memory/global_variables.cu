@@ -1,8 +1,8 @@
 #include <cuda_runtime.h>
 
 __constant__ float constData[256];
-__device__ float devData;
-__device__ float* devPointer;
+__device__ float   devData;
+__device__ float*  devPointer;
 
 int main() {
   float data[256];
