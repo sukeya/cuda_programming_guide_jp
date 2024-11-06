@@ -32,13 +32,13 @@ CUDA配列はテクスチャフェッチのために最適化された不透明�
 返されたピッチ(pitch)(またはストライド(stride))は配列要素にアクセスするように使わなければならない。
 以下のコードサンプルでは、`column` * `row`の2次元配列をアロケートし、デバイスコード内で配列上をループする方法を示す。
 
-```cpp title="/src/programming_interface/device_memory/add_2_matrices.cu" linenums="1"
+```cpp title="/src/programming_interface/device_memory/add_2_matrices.cu" linenums="3"
 --8<-- "./src/programming_interface/device_memory/add_2_matrices.cu:3:35"
 ```
 
 以下のコードは、要素数が`width` * `height` * `depth`の3次元配列を確保するコードである。
 
-```cpp title="/src/programming_interface/device_memory/add_2_tensors.cu" linenums="1"
+```cpp title="/src/programming_interface/device_memory/add_2_tensors.cu" linenums="3"
 --8<-- "./src/programming_interface/device_memory/add_2_tensors.cu:3:39"
 ```
 

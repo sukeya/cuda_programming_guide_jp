@@ -1,3 +1,4 @@
 add_subdirectory(initialization)
 add_subdirectory(device_memory)
 add_subdirectory(shared_memory)
+add_subdirectory(distributed_shared_memory)

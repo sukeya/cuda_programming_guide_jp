@@ -5,7 +5,7 @@
 
 以下のコード例は共有メモリを活用しない行列積の実装である。各スレッドはAのある行とBのある列を読んで、対応するCの要素を計算する。以下の図のように、Aの各行はBの列数だけグローバルメモリから読まれ、Bの各行もAの行数だけ読まれる。
 
-```cpp title="/src/programming_interface/shared_memory/not_using_shared_memory.cu" linenums="1"
+```cpp title="/src/programming_interface/shared_memory/not_using_shared_memory.cu" linenums="7"
 --8<-- "./src/programming_interface/shared_memory/not_using_shared_memory.cu:7:70"
 ```
 
@@ -14,7 +14,7 @@
 
 以下のコード例は共有メモリを活用した行列積の実装である。この実装では、各スレッドブロックはCのある正方部分行列Csubを計算し、そのブロックの各スレッドはCsubの各要素を計算する。以下の図のように、Csubは次元が(ブロックサイズ, Aの列数)のAの部分行列と次元が(Bの行数, ブロックサイズ)のBの部分行列の積で計算できるので、この2つの部分行列をグローバルメモリから共有メモリにロードすればAの各行は(Bの列数) / (ブロックサイズ)だけ、Bの各行は(Aの行数) / (ブロックサイズ)だけ読めばよい。
 
-```cpp title="/src/programming_interface/shared_memory/using_shared_memory.cu" linenums="1"
+```cpp title="/src/programming_interface/shared_memory/using_shared_memory.cu" linenums="7"
 --8<-- "./src/programming_interface/shared_memory/using_shared_memory.cu:7:137"
 ```
 
