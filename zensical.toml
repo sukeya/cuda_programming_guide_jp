@@ -1,0 +1,59 @@
+[project]
+site_name = "CUDAプログラミングガイド 日本語解説"
+site_url = "https://sukeya.github.io/cuda_programming_guide_jp"
+repo_url = "https://github.com/sukeya/cuda_programming_guide_jp"
+repo_name = "sukeya/cuda_programming_guide_jp"
+edit_uri = "blob/main/docs/"
+nav = [
+  { "概要" = "index.md" },
+  { "プログラミングモデル" = "programming_model.md" },
+  { "プログラミングインターフェイス" = [
+    "programming_interface/index.md",
+    { "NVCCを使ったコンパイル" = "programming_interface/to_compile_with_nvcc.md" },
+    { "CUDAランタイム" = [
+      "programming_interface/cuda_runtime/index.md",
+      { "初期化" = "programming_interface/cuda_runtime/initialization.md" },
+      { "デバイスメモリ" = "programming_interface/cuda_runtime/device_memory.md" },
+      { "デバイスメモリのL2アクセス管理" = "programming_interface/cuda_runtime/device_memory_l2_access_management.md" },
+      { "共有メモリ" = "programming_interface/cuda_runtime/shared_memory.md" },
+      { "分散共有メモリ" = "programming_interface/cuda_runtime/distributed_shared_memory.md" },
+      { "ページロックされたホストメモリ" = "programming_interface/cuda_runtime/page_locked_host_memory.md" }
+    ] }
+  ] }
+]
+
+[project.theme]
+features = [
+  "content.code.copy",
+  "content.action.edit",
+  "toc.integrate",
+  "navigation.top",
+  "navigation.indexes"
+]
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
+
+[project.markdown_extensions.admonition]
+
+[project.markdown_extensions.footnotes]
+
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+
+[project.markdown_extensions.pymdownx.details]
+
+[project.markdown_extensions.pymdownx.inlinehilite]
+
+[project.markdown_extensions.pymdownx.snippets]
+
+[project.markdown_extensions.pymdownx.superfences]
+
+[project.markdown_extensions.toc]
+permalink = true
+
+[project.markdown_extensions.toc.slugify]
+object = "pymdownx.slugs.slugify"
+kwds = { case = "lower" }
